@@ -1,0 +1,5 @@
+Nota de aprobacion: 70
+Nota de reposicion: 60
+Tamaño de los grupos de notas: 05
+Escala del gráfico: 05
+Ordenamiento: Alfabetico
