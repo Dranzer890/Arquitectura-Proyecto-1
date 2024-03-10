@@ -5,8 +5,8 @@
 
 section .data
 ;se selecciona los archivos a leer con los datos de los alumnos y las notas de aprobación
-	archconf db "configuracion.txt",0	;nombre del archivo con la configuración
-	archdat db "archivo.txt",0	;nombre del archivo con los datos
+	archivo_config db "configuracion.txt",0	;nombre del archivo con la configuración
+	archivo_ar db "archivo.txt",0	;nombre del archivo con los datos
 
 
 	x  db "x "
@@ -20,10 +20,10 @@ section .data
 section .bss
 ; se reservan espacios de memoria para las variables
 
-	textconf resb 150 ;espacio para configuracion.txt
-	textdat resb 1000 ;espacio para archivo.txt
-	ttc resb 150 ; espacio de almacenamiento de configuracion.txt
-	ttd resb 1000 ;espacio para almacenar archivo.txt
+	text_config resb 150 ;espacio para configuracion.txt
+	text_ar resb 1000 ;espacio para archivo.txt
+	config_alma resb 150 ; espacio de almacenamiento de configuracion.txt
+	ar_alma resb 1000 ;espacio para almacenar archivo.txt
 
 	byteactual resw 1 ;contador para indicar la posición que se lee
 	finalf1 resw 1 ;indica donde esta el final de la fila
@@ -36,15 +36,15 @@ section .bss
 	contadorletras resw 1
 	copiadorfilas resw 1
 
-	sizef1 resw 1		;almacena  el tamaño de la fila 1
-	sizef2 resw 1		;almacena el tamaño de la fila 2
+	tamanof1 resw 1		;almacena  el tamaño de la fila 1
+	tamanof2 resw 1		;almacena el tamaño de la fila 2
 
-	bubbletimes resw 1
+	bubble resw 1
 	contadorfilas resw 1
 
 
-	arraynotas resb 100		;almacena las notas en el eje x
-	arrayestudiantes resb 100	;alcena la cantidad de estudiantes por grupo de notas
+	arreglo_notas resb 100		;almacena las notas en el eje x
+	arreglo_estudiantes resb 100	;alcena la cantidad de estudiantes por grupo de notas
 
 
 	nota resb 1
@@ -55,11 +55,11 @@ section .bss
 
 
 ;variables del archivo configuracion
-	nda resb 3 ; almacena la nota de aprobacion
-	ndr resb 2 ; almacena la nota de  reposicion
-	tdgn resb 2 ; almacena  el tamaño de los grupos de notas
-	edg resb 2 ; almacena la escala del grafico
-	tdo resb 1; almacena el tipo de ordenamiento
+	aprov resb 3 ; almacena la nota de aprobacion
+	reprov resb 2 ; almacena la nota de  reposicion
+	tam_gnota resb 2 ; almacena  el tamaño de los grupos de notas
+	escala_g resb 2 ; almacena la escala del grafico
+	tipo_orde resb 1; almacena el tipo de ordenamiento
 	
 ;variables para la comparación
 
@@ -67,4 +67,51 @@ section .bss
 	letra2 resb 1
 	copiafila1 resb 40 ;almacena fila 1
 	copiafila2 resb 40 ;almacena fila 2
+
+section .text
+	global _start
+	_start:
+	
+
+	;configuracion.txt
+	mov rax, SYS_OPEN
+	mov rdi, archivo_config
+	mov rsi, O_RDONLY
+	mov rdx, 0
+	syscall
+	push rax
+	mov rdi, rax
+	mov rax, SYS_READ
+	mov rsi, text_config
+	mov rdx, config_alma
+	syscall
+	mov rax, SYS_CLOSE
+	pop rdi
+	syscall
+
+	print text_config
+
+
+	;extraccion del texto
+	mov ax, [text_config+21]; almacena en ax
+	mov word [aprov],ax ;almacena en aprov los datos de ax
+	mov ax, [text_config+45]
+	mov word [reprov], ax
+	mov ax, [text_config+105]
+	mov word [escala_g],ax
+	mov a1, [text_config+122]
+	mov byte [tipo_orde], a1
+
+	;archivo.txt
+	mov rax, SYS_OPEN
+	mov rdi, archivo_ar
+	mov rsi, O_RDONLY
+	mov rdx, 0
+	syscall
+	push rax
+	mov rdi, rax
+	mov rax, SYS_READ
+	mov rsi, text_ar
+
+
 
