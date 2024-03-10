@@ -112,6 +112,54 @@ section .text
 	mov rdi, rax
 	mov rax, SYS_READ
 	mov rsi, text_ar
+	mov rdx, ar_alma
+	syscall
+	mov rax, SYS_CLOSE
+	pop rdi
+	syscall
+	print text_ar
 
 
+	mov word [bubletimes],0d	;se limpia el contador
+	clear:
+	mov word [byteactual],0d
+	mov word [iniciof1],0d
+	mov word [finalf1],0d
+	mov word [iniciof2],0d
+	mov word [finalf2],0d
 
+	mov word [bytefinaltext],900d
+	mov word [contadorletras],0d
+	mov word [copiadorfilas],0d
+	mov word [tamanof1],0d
+	mov word [tamanof2],0d
+	mov word [contadorfilas],1d
+
+bublesort:
+
+        mov word bx,[byteactual]; carga la letra actual para iniciar la fila 1
+	mov byte al, [textdat +rbx ]
+
+	mov word r10w,[copiadorfilas]
+	mov byte [copiafila1+r10],al
+	add word r10w,1d
+	mov word [copiadorfilas],r10w
+        mov word cx,[byteactual]
+	mov word  [finalf1], cx
+
+	mov word [byteactual],cx
+	add word cx, 1d
+	mov word [byteactual],cx
+
+
+	cmp byte al,10d ; compara letra actual
+	jne bublesort
+	mov word r9w,[copiadorfilas]
+	mov word [tamanof1],r9w
+	mov word [copiadorfilas],0d
+
+
+	mov word [iniciof2],cx
+	mov word r11w,[contadorfilas]
+	add word r11w, 1d
+	mov word [contadorfilas],r11w
