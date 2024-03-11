@@ -15,6 +15,10 @@ section .data
 	finaldefila db "|"
 	espaciox4 db "    "
 	cien db"100 "
+	verde db 0x1b, "[32m"
+	rojo db 0x1b,"[31m"
+	blanco db 0x1b,"[37m"
+	amarillo db 0x1b,"[33m"
 	
 
 section .bss
@@ -67,6 +71,15 @@ section .bss
 	letra2 resb 1
 	copiafila1 resb 40 ;almacena fila 1
 	copiafila2 resb 40 ;almacena fila 2
+
+;variables histograma
+	cantidady resw1
+	cantidadx resw1
+	edgb resb 1
+	residuoy resb 1
+	residuox resb 1
+	tdgnb resb 1
+	arrayaxisy resb 100
 
 section .text
 	global _start
