@@ -112,8 +112,8 @@ section .bss
 	mov word [reprov], ax
 	mov ax, [text_config+105]
 	mov word [escala_g],ax
-	mov ax, [text_config+122]
-	mov byte [tipo_orde], ax
+	mov al, [text_config+122]
+	mov byte [tipo_orde], al
 
 	;archivo.txt
 	mov rax, SYS_OPEN
@@ -179,7 +179,7 @@ bublesort:
 
 Efila2:
 	mov word ax,[byteactual]
-	mov byte bl,[textdat+rax]
+	mov byte bl,[text_ar+rax]
 	mov word r8w,[copiadorfilas]
 	mov byte [copiafila2+r8],bl
 
@@ -190,7 +190,7 @@ Efila2:
 	add word ax,1d
 	mov word [byteactual],ax
 
-        mov byte r13b,[textdat+rax]
+        mov byte r13b,[text_ar+rax]
         cmp byte r13b,0d
         jne igualenter
         mov word  [bytefinaltext],ax
@@ -202,16 +202,16 @@ igualenter:
 
 antesdeordenamiento:
 	mov word r8w,[copiadorfilas]
-	mov word [sizef2],r8w
+	mov word [tamanof2],r8w
 	mov word [copiadorfilas],0d
 
 ordenamiento:
 	;alfabetico
-	mov byte a1, [tipo_orde]
-	cmp byte a1, 65d
+	mov byte al, [tipo_orde]
+	cmp byte al, 65d
 	je alfabetico
-	mov byte a1, [tipo_orde]
-	cmp byte a1, 97d
+	mov byte al, [tipo_orde]
+	cmp byte al, 97d
 	je alfabetico
 	
 	;por nota
@@ -224,14 +224,14 @@ ordenamiento:
 	mov byte [num1+1], c1
 	mov byte [num2+1], d1
 
-	mov byte a1, [num1]
-	mov byte b1, [num2]
+	mov byte al, [num1]
+	mov byte bl, [num2]
 	cmp byte a1,b1
 	jg letra1menor
 	jb letra1mayor
-	mov byte a1, [num1+1]
-	mov byte b1, [num2+1]
-	cmp byte a1,b1
+	mov byte al, [num1+1]
+	mov byte bl, [num2+1]
+	cmp byte al,bl
 	jg letra1menor
 	jb letra1mayor
 
