@@ -192,3 +192,65 @@ antesdeordenamiento:
 	mov word [sizef2],r8w
 	mov word [copiadorfilas],0d
 
+ordenamiento:
+	;alfabetico
+	mov byte a1, [tipo_orde]
+	cmp byte a1, 65d
+	je alfabetico
+	mov byte a1, [tipo_orde]
+	cmp byte a1, 97d
+	je alfabetico
+	
+	;por nota
+	mov word ax, [finalf1]
+	mov word bx, [finalf2]
+	sub word ax, 1d
+	sub word bx, 1d
+	mov byte c1, [text_ar + rax]
+	mov byte d1, [text_ar + rbx]
+	mov byte [num1+1], c1
+	mov byte [num2+1], d1
+
+	mov byte a1, [num1]
+	mov byte b1, [num2]
+	cmp byte a1,b1
+	jg letra1menor
+	jb letra1mayor
+	mov byte a1, [num1+1]
+	mov byte b1, [num2+1]
+	cmp byte a1,b1
+	jg letra1menor
+	jb letra1mayor
+
+
+
+alfabetico:
+	mov word ax, [iniciof1]
+	add word ax, [contadorletras]
+	mov byte cl,[text_ar+rax]
+	mov byte [letra1],cl
+
+        mov word ax,[iniciof2]
+        add word ax,[contadorletras]
+        mov byte cl,[text_ar+rax]
+        mov byte [letra2],cl
+
+
+	mov word dx,[contadorletras]
+	add word dx,1d
+	mov word [contadorletras],dx
+
+	mov byte al,[letra1]
+	mov byte bl,[letra2]
+	cmp byte al,bl
+	je alfabetico
+
+
+	;limpiar 
+	mov byte [contadorletras],0d
+	mov byte [copiadorfilas],0d
+
+
+	jg  letra1mayor
+
+	
