@@ -253,4 +253,71 @@ alfabetico:
 
 	jg  letra1mayor
 
-	
+
+letra1menor:
+	; iniciof1=iniciof2
+	mov word r12w,[iniciof2]
+	mov word [iniciof1],r12w
+
+	;byteactual=iniciof2
+	mov word [byteactual],r12w
+	jmp finaldelremplazo
+
+letra1mayor:
+	mov word bx,[copiadorfilas]
+	mov byte al,[copiafila2+rbx]
+
+	add word bx,[iniciof1]
+	mov byte [text_ar+rbx],al
+
+	mov word dx,[copiadorfilas]
+	add word dx,1d
+	mov word [copiadorfilas],dx
+
+	mov word ax,[tamanof2]
+	cmp word dx,ax
+	jb letra1mayor
+
+	mov word ax,[copiadorfilas]
+	add ax,[iniciof1]
+	mov word [byteactual],ax
+
+        mov word [copiadorfilas],0d
+
+
+copyf1: 
+	mov word bx,[copiadorfilas]
+	mov byte al,[copiafila1+rbx]
+
+	add word bx,[byteactual]
+	mov byte [text_ar+rbx],al
+
+	mov word bx,[copiadorfilas]
+	add word bx,1d
+	mov word [copiadorfilas],bx
+
+	mov word ax,[tamanof1]
+	cmp word bx,ax
+	jb copyf1
+
+	mov word [copiadorfilas],0d
+
+	mov word ax,[byteactual]
+	mov word [iniciof1],ax
+
+
+finaldelremplazo:
+	mov word ax,[finalf2]
+	mov word bx, [bytefinaltext]
+	cmp word ax,bx
+
+	jb bublesort
+
+	mov word ax,[bubbles]
+	add word ax,1d
+	mov word [bubbless],ax
+	mov word bx,[contadorfilas]
+	mov word [contadorfilas],0d
+	cmp word ax,bx
+	jb limpiarvariables
+
