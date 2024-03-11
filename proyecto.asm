@@ -506,4 +506,302 @@ finalnotas:
  	mov rdx, 2
  	syscall
 
+	print text_ar
+	mov rax, 1
+	mov rdi, 1
+ 	mov rsi, 10d
+ 	mov rdx, 2
+ 	syscall
 
+;limpiar contador
+	mov word [contadorfilas],1d
+	mov word [tamanof1],0d	
+
+loopimpresion:
+	xor rax,rax
+	xor rdx,rdx
+	mov word cx,[contadorfilas] 
+	cmp word cx,1d		
+	jne continuarejey
+	add word cx,1d
+	mov word [contadorfilas],cx
+	jmp loopimpresion
+
+continuarejey:
+	mov word bx,[cantidady]
+	sub word bx,cx
+	add word bx,1d
+	mov byte al,[arrayaxisy+rbx]
+	cmp byte al,100d
+	jb nocien
+
+	mov rax, 1
+        mov rdi, 1
+        mov rsi, cien
+        mov rdx, 4
+        syscall
+
+	mov rax, 1
+        mov rdi, 1
+        mov rsi, finalfila
+        mov rdx, 4
+        syscall
+	jmp imprimirx
+
+nocien:
+	mov byte al,[arrayaxisy+rbx]
+	call _wdeci2ascii
+
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, num1
+        mov rdx, 1
+        syscall
+
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, num2
+        mov rdx, 1
+        syscall
+
+	mov rax, 1
+        mov rdi, 1
+        mov rsi, espaciox2
+        mov rdx, 2
+        syscall
+
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, finalfila
+        mov rdx, 2
+        syscall
+
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, espaciox2
+        mov rdx, 2
+        syscall
+
+imprimirx:
+;cargar dato
+	mov word bx,[tamanof1]
+	mov byte dl ,[arrayestudiantes+rbx]
+	mov word ax, [cantidady]	
+	sub word ax,[contadorfilas]
+	mov byte bl,[arrayaxisy+rax]
+	cmp byte dl,bl	
+	jb noprintx
+
+	mov byte ah,[aprov]
+	mov byte al,[aprov+1]
+	mov byte [num1],ah
+	mov byte [num2],al
+	call _wascii2dec
+
+bp4:	
+	mov word bx,[tamanof1]	
+	mov byte cl,[arraynotas+rbx]
+
+bp3:	
+	cmp byte cl,al
+	jg letrasverdes	
+
+bp1:	
+	mov byte ah,[reprov]
+	mov byte al,[reprov+1]
+	mov byte [num1],ah
+	mov byte [num2],al
+
+	call _wascii2dec
+	mov word bx,[tamanof1]
+	mov byte cl,[arraynotas+rbx]
+bp2:	
+	cmp byte al,cl
+	jb letrasamarillas
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, rojo
+        mov rdx, 5
+        syscall
+	jmp imprimircolor
+
+letrasamarillas:
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, amarillo
+        mov rdx, 5
+        syscall
+	jmp imprimircolor
+
+
+letrasverdes:
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, verde
+        mov rdx, 5
+        syscall
+
+imprimircolor:
+	mov rax, 1
+	mov rdi, 1
+	mov rsi, x
+	mov rdx, 2
+	syscall
+	mov rax, 1
+        mov rdi, 1
+        mov rsi, espaciox4
+        mov rdx, 4
+        syscall
+	jmp compararx
+
+noprintx:
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, espaciox2
+        mov rdx, 2
+        syscall
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, espaciox4
+        mov rdx, 4
+        syscall
+compararx:
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, blanco
+        mov rdx, 5
+        syscall
+	mov word ax,[tamanof1]
+	add word ax, 1d
+	mov word [tamanof1],ax
+	cmp word ax,[cantidadx]
+	jb imprimirx
+
+	mov word [tamanof1],0d
+
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, finalfila
+        mov rdx, 1
+        syscall
+
+	mov rax, 1
+        mov rdi, 1
+        mov rsi, espacioyenter
+        mov rdx, 2
+        syscall
+
+	mov word ax,[contadorfilas]
+	add word ax,1d
+	mov word [contadorfilas],ax
+
+	mov word bx,[cantidady]
+	add word bx,1d
+	cmp word ax,bx
+	jb loopimpresion
+
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, espacioyenter
+        mov rdx, 2
+        syscall
+
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, espaciox4
+        mov rdx, 4
+        syscall
+
+  	mov rax, 1
+        mov rdi, 1
+        mov rsi, espaciox4
+        mov rdx, 4
+        syscall
+	mov word [contadorfilas],0d
+imprimirejex:
+	mov word bx,[contadorfilas]
+	mov byte al,[arraynotas+rbx]
+	cmp  byte al, 100d
+	jb nocien2
+        mov rax, 1
+        mov rdi, 1
+        mov rsi,cien
+        mov rdx, 4
+        syscall
+
+	jmp finalhistograma
+
+
+nocien2:
+	mov byte al,[arraynotas+rbx]
+
+	call _wdeci2ascii
+
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, num1
+        mov rdx, 1
+        syscall
+        mov rax, 1
+        mov rdi, 1
+        mov rsi,num2
+        mov rdx, 1
+        syscall
+	mov rax, 1
+        mov rdi, 1
+        mov rsi,espaciox4
+        mov rdx, 4
+        syscall
+	mov word ax,[contadorfilas]
+	add word ax,1d
+	mov word [contadorfilas],ax
+	cmp word ax,[cantidadx]
+	jb imprimirejex
+
+finalhistograma:
+	mov rax, 1
+        mov rdi, 1
+        mov rsi,espacioyenter
+        mov rdx, 2
+        syscall
+        mov rax, 1
+        mov rdi, 1
+        mov rsi, dobleespacio
+        mov rdx, 2
+        syscall
+
+
+	.finalprograma: 
+		mov rax,60	
+		mov rdi,0	
+		syscall		
+_wascii2dec:
+	mov byte al, [num1]
+	mov byte bl,[num2]
+	sub byte al,48d
+	sub byte bl,48d
+	mov byte cl,al
+	add byte al,cl
+        add byte al,cl
+        add byte al,cl
+        add byte al,cl
+        add byte al,cl
+        add byte al,cl
+        add byte al,cl
+        add byte al,cl
+        add byte al,cl
+	add byte al,bl
+	ret
+
+_wdeci2ascii:
+	mov byte cl,al
+	mov byte bl,10d
+	div byte bl
+	add byte al,48d
+	mov byte [num1],al
+	sub byte al,48d
+	mul byte bl
+	sub byte cl,al
+	add byte cl,48d
+	mov byte [num2],cl
+	ret
