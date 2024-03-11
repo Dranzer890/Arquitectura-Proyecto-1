@@ -113,7 +113,7 @@ section .bss
 	mov ax, [text_config+105]
 	mov word [escala_g],ax
 	mov ax, [text_config+122]
-	mov byte [tipo_orde], a1
+	mov byte [tipo_orde], ax
 
 	;archivo.txt
 	mov rax, SYS_OPEN
@@ -133,7 +133,7 @@ section .bss
 	print text_ar
 
 
-	mov word [bubbles],0d	;se limpia el contador
+	mov word [bubble],0d	;se limpia el contador
 	clear:
 	mov word [byteactual],0d
 	mov word [iniciof1],0d
@@ -151,7 +151,7 @@ section .bss
 bublesort:
 
         mov word bx,[byteactual]; carga la letra actual para iniciar la fila 1
-	mov byte al, [textdat +rbx ]
+	mov byte al, [text_ar +rbx ]
 
 	mov word r10w,[copiadorfilas]
 	mov byte [copiafila1+r10],al
