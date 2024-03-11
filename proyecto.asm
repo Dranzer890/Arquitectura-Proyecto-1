@@ -133,7 +133,7 @@ section .text
 	print text_ar
 
 
-	mov word [bubletimes],0d	;se limpia el contador
+	mov word [bubbles],0d	;se limpia el contador
 	clear:
 	mov word [byteactual],0d
 	mov word [iniciof1],0d
@@ -333,4 +333,63 @@ finaldelremplazo:
 	mov word [contadorfilas],0d
 	cmp word ax,bx
 	jb limpiarvariables
+
+;Histograma
+
+	mov byte ah, [escala_g]
+	mov byte al,[escala_g+1]
+	mov byte [num1],ah
+	mov byte [num2],al
+	call _wascii2dec
+	mov byte [escala_g],al
+
+	mov word [canty],1d
+	mov byte [arrayaxisy],0d
+	xor rcx,rcx
+calculoejey:
+	mov word ax,[canty]
+	add byte cl,[escala]
+	mov byte [arrayaxisy+rax],cl
+	add word ax,1d
+	mov word [canty],ax
+	;se compara que el dato sea menor que 100
+	cmp byte cl,100d
+	jb calculoejey
+
+;tamaño del grupo de notas
+	mov byte ah,[text_config+80]
+	mov byte al,[text_config+81]
+        mov byte [tdgn], ah
+	mov byte [tdgn+1],al
+	mov byte [num1],ah
+	mov byte [num2],al
+	call _wascii2dec
+	mov byte [tdgnb],al
+	
+	xor rax,rax
+	xor rbx,rbx
+
+        mov byte al, 100d
+        mov byte bl,[tdgnb]
+        div byte bl
+        mov byte [cantidadx],al
+
+;Calcular residuox
+        mov byte [residuox],ah
+	mov byte bl,[residuox]
+	cmp bl,0d
+	je residuo2
+	mov byte al,[cantidadx]
+	add byte al,1d
+	mov byte [cantidadx],al
+
+residuo2:
+	mov byte bl, [residuoy]
+	cmp bl,0d
+	je finalresiduo
+	mov byte al,[cantidady]
+	add byte al,1d
+	mov byte [cantidady],al
+
+finalresiduo:
 
