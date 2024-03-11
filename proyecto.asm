@@ -392,4 +392,118 @@ residuo2:
 	mov byte [cantidady],al
 
 finalresiduo:
+	mov byte dl,0d
+limpiarnotas:
+	mov byte [arraynotas+rdx],0d
+	mov byte [arrayestudiantes+rdx],0d
+	cmp byte dl,100d
+	add byte dl,1d
+	jb limpiarnotas
+
+	mov byte dl,1d ; el registro dl es un contador
+	mov byte r9b,[cantidadx]
+	mov byte bl,[tdgnb]
+	mov byte [nota],0d
+asignarnotas:
+	mov byte al,dl
+	mul byte bl
+	mov byte [nota],al
+	mov byte al,dl
+	sub byte al,1d
+	mov byte r14b,[nota]
+	mov byte [arraynotas+rax],r14b
+	add byte dl,1d
+	mov byte r10b,dl
+	cmp byte r10b,r9b
+	jbe asignarnotas
+	mov word [contadorfilas],0d
+	mov word [byteactual],0d
+
+findnotes:
+	mov word bx,[byteactual]
+	mov byte al,[text_ar+rbx]	
+	add word bx,1d
+	mov word [byteactual],bx
+	cmp byte al, 10d
+	jne findnotes
+
+		
+enter:		
+	mov word cx,[contadorfilas]
+	add word cx,1d
+	mov word [contadorfilas],cx
+	mov word bx,[byteactual]
+	sub word bx,2d
+	mov byte al,[text_ar+rbx]
+	mov byte [num1+1],al
+	sub word bx,1d
+	mov byte al,[text_ar+rbx]
+	cmp byte al,32	
+	jne nospace
+	mov byte al,48d
+
+nospace:	
+	mov byte [num1],al
+	mov  byte ah,[num1]
+	mov byte al,[num1+1]
+	call _wascii2dec
+
+	mov word bx,[contadorfilas]
+	sub word bx,1d
+	mov byte [todaslasnotas+rbx],al
+	mov word ax,[bubbles]
+	mov word bx,[contadorfilas]
+	cmp  word ax,bx
+	jg findnotes
+	mov word [contadorfilas],0d
+
+	mov byte r10b,0d
+
+contarnotas:
+	mov word bx,[contadorfilas]
+	mov byte al,[todaslasnotas+rbx]
+	mov byte bl,r10b
+	mov byte dl,[arraynotas+rbx]
+	add byte r10b,1d
+	cmp byte al,dl
+
+s1:		
+	jg contarnotas
+	mov byte bl,r10b
+	sub byte bl,1d
+	mov byte al,[arrayestudiantes+rbx]
+	add byte al,1d
+	mov byte [arrayestudiantes+rbx],al
+	mov byte r10b,0d
+	mov word ax,[contadorfilas]
+	add word ax,1d
+	mov word [contadorfilas],ax
+	mov word bx,[bubbles]
+	cmp word ax,bx
+		
+s2:		
+	jb contarnotas
+	mov byte r10b,0d
+
+	mov byte al, 100
+	mov byte bl,[bubbles]
+	div byte bl
+	mov byte r9b,al  
+finalnotas:
+
+	mov byte bl,r10b
+	mov byte al,[arrayestudiantes+rbx]
+	mul byte r9b
+	mov byte [arrayestudiantes+rbx],al
+	add byte r10b,1d
+	mov byte al,[bubbles+1]
+	cmp byte bl,al
+	jb finalnotas
+
+	mov rax, 1
+ 	mov rdi, 1
+ 	mov rsi, 10d
+ 	mov rdx, 2
+ 	syscall
+
 
