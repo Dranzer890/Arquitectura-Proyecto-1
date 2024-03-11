@@ -73,15 +73,15 @@ section .bss
 	copiafila2 resb 40 ;almacena fila 2
 
 ;variables histograma
-	cantidady resw1
-	cantidadx resw1
+	cantidady resw 1
+	cantidadx resw 1
 	edgb resb 1
 	residuoy resb 1
 	residuox resb 1
 	tdgnb resb 1
 	arrayaxisy resb 100
 
-section .text
+ section .text
 	global _start
 	_start:
 	
@@ -112,7 +112,7 @@ section .text
 	mov word [reprov], ax
 	mov ax, [text_config+105]
 	mov word [escala_g],ax
-	mov a1, [text_config+122]
+	mov ax, [text_config+122]
 	mov byte [tipo_orde], a1
 
 	;archivo.txt
