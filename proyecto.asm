@@ -219,14 +219,14 @@ ordenamiento:
 	mov word bx, [finalf2]
 	sub word ax, 1d
 	sub word bx, 1d
-	mov byte c1, [text_ar + rax]
-	mov byte d1, [text_ar + rbx]
-	mov byte [num1+1], c1
-	mov byte [num2+1], d1
+	mov byte cl, [text_ar + rax]
+	mov byte dl, [text_ar + rbx]
+	mov byte [num1+1], cl
+	mov byte [num2+1], dl
 
 	mov byte al, [num1]
 	mov byte bl, [num2]
-	cmp byte a1,b1
+	cmp byte al,bl
 	jg letra1menor
 	jb letra1mayor
 	mov byte al, [num1+1]
@@ -326,13 +326,13 @@ finaldelremplazo:
 
 	jb bublesort
 
-	mov word ax,[bubbles]
+	mov word ax,[bubble]
 	add word ax,1d
-	mov word [bubbless],ax
+	mov word [bubble],ax
 	mov word bx,[contadorfilas]
 	mov word [contadorfilas],0d
 	cmp word ax,bx
-	jb limpiarvariables
+	jb clear
 
 ;Histograma
 
@@ -343,15 +343,15 @@ finaldelremplazo:
 	call _wascii2dec
 	mov byte [escala_g],al
 
-	mov word [canty],1d
+	mov word [cantidady],1d
 	mov byte [arrayaxisy],0d
 	xor rcx,rcx
 calculoejey:
-	mov word ax,[canty]
-	add byte cl,[escala]
+	mov word ax,[cantidady]
+	add byte cl,[escala_g]
 	mov byte [arrayaxisy+rax],cl
 	add word ax,1d
-	mov word [canty],ax
+	mov word [cantidady],ax
 	;se compara que el dato sea menor que 100
 	cmp byte cl,100d
 	jb calculoejey
@@ -359,8 +359,8 @@ calculoejey:
 ;tamaño del grupo de notas
 	mov byte ah,[text_config+80]
 	mov byte al,[text_config+81]
-        mov byte [tdgn], ah
-	mov byte [tdgn+1],al
+        mov byte [tam_gnota], ah
+	mov byte [tam_gnota+1],al
 	mov byte [num1],ah
 	mov byte [num2],al
 	call _wascii2dec
@@ -394,8 +394,8 @@ residuo2:
 finalresiduo:
 	mov byte dl,0d
 limpiarnotas:
-	mov byte [arraynotas+rdx],0d
-	mov byte [arrayestudiantes+rdx],0d
+	mov byte [arreglo_notas+rdx],0d
+	mov byte [arreglo_estudiantes+rdx],0d
 	cmp byte dl,100d
 	add byte dl,1d
 	jb limpiarnotas
@@ -411,7 +411,7 @@ asignarnotas:
 	mov byte al,dl
 	sub byte al,1d
 	mov byte r14b,[nota]
-	mov byte [arraynotas+rax],r14b
+	mov byte [arreglo_notas+rax],r14b
 	add byte dl,1d
 	mov byte r10b,dl
 	cmp byte r10b,r9b
@@ -451,7 +451,7 @@ nospace:
 	mov word bx,[contadorfilas]
 	sub word bx,1d
 	mov byte [todaslasnotas+rbx],al
-	mov word ax,[bubbles]
+	mov word ax,[bubble]
 	mov word bx,[contadorfilas]
 	cmp  word ax,bx
 	jg findnotes
@@ -463,7 +463,7 @@ contarnotas:
 	mov word bx,[contadorfilas]
 	mov byte al,[todaslasnotas+rbx]
 	mov byte bl,r10b
-	mov byte dl,[arraynotas+rbx]
+	mov byte dl,[arreglo_notas+rbx]
 	add byte r10b,1d
 	cmp byte al,dl
 
@@ -471,14 +471,14 @@ s1:
 	jg contarnotas
 	mov byte bl,r10b
 	sub byte bl,1d
-	mov byte al,[arrayestudiantes+rbx]
+	mov byte al,[arreglo_estudiantes+rbx]
 	add byte al,1d
-	mov byte [arrayestudiantes+rbx],al
+	mov byte [arreglo_estudiantes+rbx],al
 	mov byte r10b,0d
 	mov word ax,[contadorfilas]
 	add word ax,1d
 	mov word [contadorfilas],ax
-	mov word bx,[bubbles]
+	mov word bx,[bubble]
 	cmp word ax,bx
 		
 s2:		
@@ -486,17 +486,17 @@ s2:
 	mov byte r10b,0d
 
 	mov byte al, 100
-	mov byte bl,[bubbles]
+	mov byte bl,[bubble]
 	div byte bl
 	mov byte r9b,al  
 finalnotas:
 
 	mov byte bl,r10b
-	mov byte al,[arrayestudiantes+rbx]
+	mov byte al,[arreglo_estudiantes+rbx]
 	mul byte r9b
-	mov byte [arrayestudiantes+rbx],al
+	mov byte [arreglo_estudiantes+rbx],al
 	add byte r10b,1d
-	mov byte al,[bubbles+1]
+	mov byte al,[bubble+1]
 	cmp byte bl,al
 	jb finalnotas
 
@@ -543,7 +543,7 @@ continuarejey:
 
 	mov rax, 1
         mov rdi, 1
-        mov rsi, finalfila
+        mov rsi, finaldefila
         mov rdx, 4
         syscall
 	jmp imprimirx
@@ -572,7 +572,7 @@ nocien:
 
         mov rax, 1
         mov rdi, 1
-        mov rsi, finalfila
+        mov rsi, finaldefila
         mov rdx, 2
         syscall
 
@@ -585,7 +585,7 @@ nocien:
 imprimirx:
 ;cargar dato
 	mov word bx,[tamanof1]
-	mov byte dl ,[arrayestudiantes+rbx]
+	mov byte dl ,[arreglo_estudiantes+rbx]
 	mov word ax, [cantidady]	
 	sub word ax,[contadorfilas]
 	mov byte bl,[arrayaxisy+rax]
@@ -600,7 +600,7 @@ imprimirx:
 
 bp4:	
 	mov word bx,[tamanof1]	
-	mov byte cl,[arraynotas+rbx]
+	mov byte cl,[arreglo_notas+rbx]
 
 bp3:	
 	cmp byte cl,al
@@ -614,7 +614,7 @@ bp1:
 
 	call _wascii2dec
 	mov word bx,[tamanof1]
-	mov byte cl,[arraynotas+rbx]
+	mov byte cl,[arreglo_notas+rbx]
 bp2:	
 	cmp byte al,cl
 	jb letrasamarillas
@@ -681,7 +681,7 @@ compararx:
 
         mov rax, 1
         mov rdi, 1
-        mov rsi, finalfila
+        mov rsi, finaldefila
         mov rdx, 1
         syscall
 
@@ -720,7 +720,7 @@ compararx:
 	mov word [contadorfilas],0d
 imprimirejex:
 	mov word bx,[contadorfilas]
-	mov byte al,[arraynotas+rbx]
+	mov byte al,[arreglo_notas+rbx]
 	cmp  byte al, 100d
 	jb nocien2
         mov rax, 1
@@ -733,7 +733,7 @@ imprimirejex:
 
 
 nocien2:
-	mov byte al,[arraynotas+rbx]
+	mov byte al,[arreglo_notas+rbx]
 
 	call _wdeci2ascii
 
@@ -766,15 +766,10 @@ finalhistograma:
         syscall
         mov rax, 1
         mov rdi, 1
-        mov rsi, dobleespacio
+        mov rsi, espaciox2
         mov rdx, 2
         syscall
-
-
-	.finalprograma: 
-		mov rax,60	
-		mov rdi,0	
-		syscall		
+		
 _wascii2dec:
 	mov byte al, [num1]
 	mov byte bl,[num2]
@@ -805,3 +800,10 @@ _wdeci2ascii:
 	add byte cl,48d
 	mov byte [num2],cl
 	ret
+
+finalprograma: 
+                mov rax,60      
+                mov rdi,0       
+                syscall
+
+
