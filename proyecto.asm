@@ -163,3 +163,32 @@ bublesort:
 	mov word r11w,[contadorfilas]
 	add word r11w, 1d
 	mov word [contadorfilas],r11w
+
+Efila2:
+	mov word ax,[byteactual]
+	mov byte bl,[textdat+rax]
+	mov word r8w,[copiadorfilas]
+	mov byte [copiafila2+r8],bl
+
+	add word r8w,1d
+	mov word [copiadorfilas],r8w
+
+	mov word [finalf2],ax
+	add word ax,1d
+	mov word [byteactual],ax
+
+        mov byte r13b,[textdat+rax]
+        cmp byte r13b,0d
+        jne igualenter
+        mov word  [bytefinaltext],ax
+	mov word [bytefinaltext],ax
+
+igualenter:
+	cmp byte bl,10d
+        jne Efila2
+
+antesdeordenamiento:
+	mov word r8w,[copiadorfilas]
+	mov word [sizef2],r8w
+	mov word [copiadorfilas],0d
+
